@@ -1,5 +1,9 @@
 package WWW::Fido;
 
+#
+# $Header: /cvsroot/WWW::Fido/Fido.pm,v 1.10 2002/11/11 20:09:39 mina Exp $
+#
+
 use strict;
 use LWP::UserAgent;
 use HTTP::Cookies;
@@ -16,7 +20,7 @@ require AutoLoader;
 @EXPORT = qw(
 	
 );
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 
 # Preloaded methods go here.
@@ -230,12 +234,14 @@ sub send() {
 	($areacode, $phone) = ($self->{_phone} =~ /^(\d\d\d)(\d\d\d\d\d\d\d)$/);
 
 	%data = (
-		'lang'		=>	'en',
-		'areacode'	=>	$areacode,
-		'number'	=>	$phone,
-		'name'		=>	$self->{_name},
-		'message'	=>	$message,
-		'count'		=>	length($message),
+		'lang'			=>	'en',
+		'mailfrom'		=>	'fidoweb@infinetcomm.com',
+		'mailsubject'	=>	'SMS for you!',
+		'areacode'		=>	$areacode,
+		'number'			=>	$phone,
+		'yourname'		=>	$self->{_name},
+		'message'		=>	$message,
+		'count'			=>	length($message),
 		);
 
 	%data2 = (
@@ -244,6 +250,7 @@ sub send() {
 		'text'		=>	$message,
 		'textEnc'	=>	$message,
 		'lang'		=>	'en',
+		'yourName'	=>	$self->{_name},
 		);
 
 	#
@@ -259,16 +266,16 @@ sub send() {
 	#
 	# We need to get the cookies and login stuff by visiting the first page
 	#
-	$result = $useragent->get("http://www.fido.ca/portal/info/HomeFrame/quickMessage.jsp?lang=en");
+	$result = $useragent->get("http://www.fido.ca/portal/home/quickMsg.jsp?lang=en");
 	$result = $result->as_string();
-	if ($result !~ /Use this page to send text messages/i) {
+	if ($result !~ /You can send a message of up to/i) {
 		$@ = "Did not receive initial entry page";
 		return 0;
 		}
 	#
 	# We submit to the first page:
 	#
-	$result = $useragent->post("http://www.fido.ca/portal/info/HomeFrame/quickValidate.jsp", \%data);
+	$result = $useragent->post("http://www.fido.ca/portal/home/quickValidate.jsp", \%data);
 	$result = $result->as_string();
 	if ($result !~ /Please confirm the following/i) {
 		$@ = "Did not receive the confirmation page";
@@ -277,7 +284,7 @@ sub send() {
 	#
 	# Now we submit to the second page
 	#
-	$result = $useragent->post("http://www.fido.ca/portal/info/HomeFrame/sendmessage.jsp", \%data2);
+	$result = $useragent->post("http://www.fido.ca/portal/home/sendmessage.jsp", \%data2);
 	$result = $result->as_string();
 	if ($result !~ /has been accepted/) {
 		$@ = "Did not receive final success page";

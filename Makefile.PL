@@ -1,6 +1,9 @@
+#
+# $Header: /cvsroot/WWW::Fido/Makefile.PL,v 1.5 2002/10/31 01:07:27 mina Exp $
+#
+
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+
 WriteMakefile(
     'NAME'	=> 'WWW::Fido',
     'VERSION_FROM' => 'Fido.pm', # finds $VERSION

@@ -1,5 +1,6 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl test.pl'
+#
+# $Header: /cvsroot/WWW::Fido/test.pl,v 1.4 2002/10/31 01:07:27 mina Exp $
+#
 
 ######################### We start with some black magic to print on failure.
 
